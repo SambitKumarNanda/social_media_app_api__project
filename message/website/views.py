@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .serializer import MessageModelSerializer
+from .serializer import MessageModelSerializer, MessageModelListSerializer
 from django.contrib.auth import get_user_model
 from ..models import MessageModel
 
@@ -10,7 +10,7 @@ class MessageModelCreateGenericAPIView(generics.GenericAPIView):
     serializer_class = MessageModelSerializer
 
     def post(self, request):
-        serializer = MessageModelSerializer(data=request.data)
+        serializer = MessageModelSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "message sent successfully"}, status=status.HTTP_200_OK)
@@ -20,4 +20,4 @@ class MessageModelCreateGenericAPIView(generics.GenericAPIView):
 
 class MessageModelListGenericAPIView(generics.ListAPIView):
     queryset = MessageModel.objects.all()
-    serializer_class = MessageModelSerializer
+    serializer_class = MessageModelListSerializer
