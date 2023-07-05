@@ -37,3 +37,10 @@ class PostCommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostCommentModel
         fields = "__all__"
+
+    def create(self, validated_data):
+        comment_instance = PostCommentModel.objects.create(**validated_data)
+        post_instance = UserPostModel.objects.get(id=self.context['id'])
+        post_instance.comments.add(comment_instance)
+        post_instance.save()
+        return validated_data

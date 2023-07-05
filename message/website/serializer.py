@@ -23,21 +23,21 @@ class MessageModelSerializer(serializers.ModelSerializer):
 
 
 class MessageModelListSerializer(serializers.ModelSerializer):
-    receiver_addr = serializers.SerializerMethodField()
-    sender_addr = serializers.SerializerMethodField()
+    receiver_addr_detail = serializers.SerializerMethodField()
+    sender_addr_detail = serializers.SerializerMethodField()
 
     class Meta:
         model = MessageModel
         fields = "__all__"
 
-    def get_receiver_addr(self, instance):
+    def get_receiver_addr_detail(self, obj):
         try:
-            data = instance.receiver_addr.username
+            data = obj.receiver_addr.username
         except:
             data = []
         return data
 
-    def get_sender_addr(self, instance):
+    def get_sender_addr_detail(self, instance):
         try:
             data = instance.sender_addr.username
         except:

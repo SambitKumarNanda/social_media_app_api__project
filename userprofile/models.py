@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from model_utils import Choices
 from posts.models import UserPostModel
+from friends.models import FriendModel
 
 
 # Create your models here.
@@ -30,10 +31,6 @@ class UserEducationModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-# GENDER = [('MALE', "MALE"), ('FEMALE', "FEMALE"), ('OTHER', "OTHER")]
-# REQUEST_STATUS = [('ACCEPTED', "ACCEPTED"), ("PENDING", 'PENDING'), ('REJECTED', 'REJECTED')]
-
-
 class UserProfileModel(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="UserProfileModel_user")
     GENDER = Choices(('M', 'MALE'), ('F', 'FEMALE'))
@@ -45,6 +42,7 @@ class UserProfileModel(models.Model):
     address = models.ManyToManyField(UserAddressModel, blank=True, related_name="UserProfileModel_address")
     education_addr = models.ManyToManyField(UserEducationModel, blank=True)
     posts = models.ManyToManyField(UserPostModel, blank=True)
+    friends = models.ManyToManyField(FriendModel, blank=True, related_name="UserProfileModel_friend")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

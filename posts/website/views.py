@@ -17,14 +17,14 @@ class UserPostModelCreateAPIView(generics.GenericAPIView):
             return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostCommentModelCreateAPIView(generics.GenericAPIView):
+class PostCommentModelCreateAPIView(generics.CreateAPIView):
     queryset = PostCommentModel.objects.all()
     serializer_class = PostCommentCreateSerializer
 
-    def put(self, request, id):
+    def create(self, request, id):
         try:
-            query = UserPostModel.objects.get(id=id)
-            serializer = UserPostModelCreateSerializer(data=request.data, instance=query)
+            # query = UserPostModel.objects.get(id=id)
+            serializer = PostCommentCreateSerializer(data=request.data, context={"id": id})
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message": "data saved successfully"})

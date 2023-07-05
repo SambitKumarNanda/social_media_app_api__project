@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ..models import UserProfileModel, UserEducationModel, UserPhoneNumberModel, UserAddressModel
+from friends.website.serializer import FriendModelListSerializer
 
 
 class UserEducationModelSerializer(serializers.ModelSerializer):
@@ -31,6 +32,7 @@ class UserProfileModelListSerializer(serializers.ModelSerializer):
     contact_no = serializers.SerializerMethodField()
     address = serializers.SerializerMethodField()
     education_addr = serializers.SerializerMethodField()
+    friends = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfileModel
@@ -55,6 +57,13 @@ class UserProfileModelListSerializer(serializers.ModelSerializer):
             data = UserPhoneNumberModelSerializer(obj.education_addr.all(), many=True).data
         except:
             data = []
+        return data
+
+    def get_friends(self, obj):
+        try:
+            data = FriendModelListSerializer(obj.friends.all(), many=True).data
+        except:
+            data=[]
         return data
 
 

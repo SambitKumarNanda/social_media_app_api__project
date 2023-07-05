@@ -5,9 +5,9 @@ from model_utils import Choices
 
 # Create your models here.
 class FriendModel(models.Model):
-    friends = models.ManyToManyField(get_user_model(), related_name="UserProfileModel_friends", blank=True)
-    friend_req_receieved = models.ManyToManyField(get_user_model(),
-                                                  related_name="UserProfileModel_friend_req_receieved", blank=True)
-    REQUEST_STATUS = Choices('ACCEPTED', 'PENDING', 'REJECTED')
-    friend_req_sent = models.ManyToManyField(get_user_model(), related_name="UserProfileModel_friend_req_sent",
-                                             blank=True)
+    REQUEST_STATUS = Choices(('ACCEPTED', 'ACCEPTED'), ('PENDING', 'PENDING'), ('REJECTED', 'REJECTED'))
+    request_status = models.CharField(max_length=20, choices=REQUEST_STATUS, default=REQUEST_STATUS.PENDING)
+    target_user = models.ManyToManyField(get_user_model(), blank=True, related_name="FriendModel_target_user")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

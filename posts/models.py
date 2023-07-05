@@ -12,9 +12,6 @@ class PostCommentModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.comment[:10]
-
 
 class UserPostModel(models.Model):
     post_title = models.CharField(max_length=100)

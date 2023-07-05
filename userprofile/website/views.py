@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from posts.models import UserPostModel
-
+from friends.models import FriendModel
 
 class UserProfileModelGenericAPIView(generics.GenericAPIView):
     queryset = UserProfileModel.objects.all()
@@ -35,16 +35,19 @@ class UserProfileDisplayCurrentUserDetailGenericAPIView(generics.GenericAPIView)
             return Response({"Error": f"Error has occured, {e}"}, status=status.HTTP_200_OK)
 
 
-class UserPostListAPIView(generics.GenericAPIView):
+class UserPostListGenericAPIView(generics.GenericAPIView):
     queryset = UserPostModel.objects.all()
-    serializer_class = UserProfileModelSerializer
+    serializer_class = UserPostListSerializer
 
     def get(self, request):
         try:
-            current_user_instance = request.user
+            current_user_instance = self.request.user
             queryset = UserProfileModel.objects.get(user=current_user_instance).posts.all()
             serializer = UserPostListSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": f"Error has occurred, {e}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
