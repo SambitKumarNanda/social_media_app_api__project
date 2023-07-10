@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "message",
     "feed",
     "friends",
+    "coreUtils",
     
     # 3rd party packages
     "rest_framework",

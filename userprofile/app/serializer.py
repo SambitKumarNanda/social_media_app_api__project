@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import UserProfileModel, UserEducationModel, UserPhoneNumberModel, UserAddressModel
+from ..models import UserProfileModel, UserEducationModel, UserContactDetailModel, UserAddressModel
 
 
 class UserEducationModelSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class UserEducationModelSerializer(serializers.ModelSerializer):
 
 class UserPhoneNumberModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserPhoneNumberModel
+        model = UserContactDetailModel
         fields = "__all__"
 
 
@@ -56,6 +56,3 @@ class UserProfileModelListSerializer(serializers.ModelSerializer):
         except:
             data = []
         return data
-
-
-

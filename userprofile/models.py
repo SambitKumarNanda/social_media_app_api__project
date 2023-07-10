@@ -3,12 +3,15 @@ from django.contrib.auth import get_user_model
 from model_utils import Choices
 from posts.models import UserPostModel
 from friends.models import FriendModel
+from coreUtils.models import CountryModel, StateModel, CityModel, PrimaryEducationAddressModel, \
+    SecondaryEducationAddressModel, HigherEducationAddressModel, CollegeEducationModel, EmploymentModel
 
 
 # Create your models here.
 
-class UserPhoneNumberModel(models.Model):
-    mobile_no = models.IntegerField(null=True, blank=True, unique=True)
+class UserContactDetailModel(models.Model):
+    mobile_no1 = models.IntegerField(null=True, blank=True, unique=True)
+    mobile_no2 = models.IntegerField(null=True, blank=True, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -18,14 +21,26 @@ class UserPhoneNumberModel(models.Model):
 
 
 class UserAddressModel(models.Model):
-    address = models.TextField(max_length=100, null=True, blank=True)
+    address1 = models.TextField(max_length=100, null=True, blank=True)
+    address2 = models.TextField(max_length=100, null=True, blank=True)
+    country = models.ForeignKey(CountryModel, on_delete=models.CASCADE, related_name="UserAddressModel_country",
+                                blank=True)
+    state = models.ForeignKey(StateModel, on_delete=models.CASCADE, related_name="UserAddressModel_state", blank=True)
+    city = models.ForeignKey(CityModel, on_delete=models.CASCADE, related_name="UserAddressModel_city", blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class UserEducationModel(models.Model):
-    edu_address = models.TextField(max_length=100, null=True, blank=True)
+    primay_edu = models.ForeignKey(PrimaryEducationAddressModel, on_delete=models.CASCADE,
+                                   related_name="UserEducationModel_primary_edu", blank=True)
+    secondary_edu = models.ForeignKey(SecondaryEducationAddressModel, on_delete=models.CASCADE,
+                                      related_name="UserEducationModel_secondary_edu", blank=True)
+    higher_edu = models.ForeignKey(HigherEducationAddressModel, on_delete=models.CASCADE,
+                                   related_name="UserEducationModel_higer_edu", blank=True)
+    college_edu = models.ForeignKey(CollegeEducationModel, on_delete=models.CASCADE,
+                                    related_name="UserEducationModel_college_edu", blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,9 +53,11 @@ class UserProfileModel(models.Model):
     user_profile_pic = models.FileField(upload_to="profile-image/", null=True, blank=True)
     user_profile_bg_pic = models.FileField(upload_to="profile-bg-image/", null=True, blank=True)
     user_bio = models.CharField(max_length=100, null=True, blank=True)
-    contact_no = models.ManyToManyField(UserPhoneNumberModel, blank=True, related_name="UserProfileModel_contact_no")
+    contact_no = models.ManyToManyField(UserContactDetailModel, blank=True, related_name="UserProfileModel_contact_no")
     address = models.ManyToManyField(UserAddressModel, blank=True, related_name="UserProfileModel_address")
     education_addr = models.ManyToManyField(UserEducationModel, blank=True)
+    workplace_addr = models.ForeignKey(EmploymentModel, on_delete=models.CASCADE, blank=True,
+                                       related_name="UserProfileModel_workplace_addr")
     posts = models.ManyToManyField(UserPostModel, blank=True)
     friends = models.ManyToManyField(FriendModel, blank=True, related_name="UserProfileModel_friend")
 
