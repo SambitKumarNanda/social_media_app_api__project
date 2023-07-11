@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="PostCommentModel",
+            name="AdvertisementBannerModel",
             fields=[
                 (
                     "id",
@@ -22,13 +22,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("comment", models.CharField(blank=True, max_length=100, null=True)),
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("media", models.FileField(upload_to="advertisment-media/")),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name="UserPostModel",
+            name="AdvertisementsModel",
             fields=[
                 (
                     "id",
@@ -39,18 +39,19 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("post_title", models.CharField(max_length=100)),
+                ("title", models.CharField(max_length=100)),
+                ("redirection_link", models.URLField(blank=True, null=True)),
+                ("is_paid", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
                 (
-                    "post_image",
-                    models.FileField(
-                        blank=True, null=True, upload_to="posts/post-image/"
+                    "banner",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="AdvertismentsModel_banner",
+                        to="advertisement.advertisementbannermodel",
                     ),
-                ),
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "comments",
-                    models.ManyToManyField(blank=True, to="posts.postcommentmodel"),
                 ),
             ],
         ),
