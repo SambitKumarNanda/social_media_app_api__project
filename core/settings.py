@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "feed",
     "friends",
     "coreUtils",
+    "advertisement",
     
     # 3rd party packages
     "rest_framework",

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import AdvertismentsModel, AdvertismentBannerModel
+from .models import AdvertisementsModel, AdvertisementBannerModel
 
 # Register your models here.
-admin.site.register(AdvertismentsModel)
-admin.site.register(AdvertismentBannerModel)
+admin.site.register(AdvertisementsModel)
+admin.site.register(AdvertisementBannerModel)

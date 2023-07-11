@@ -24,9 +24,11 @@ class UserAddressModel(models.Model):
     address1 = models.TextField(max_length=100, null=True, blank=True)
     address2 = models.TextField(max_length=100, null=True, blank=True)
     country = models.ForeignKey(CountryModel, on_delete=models.CASCADE, related_name="UserAddressModel_country",
-                                blank=True)
-    state = models.ForeignKey(StateModel, on_delete=models.CASCADE, related_name="UserAddressModel_state", blank=True)
-    city = models.ForeignKey(CityModel, on_delete=models.CASCADE, related_name="UserAddressModel_city", blank=True)
+                                blank=True, null=True)
+    state = models.ForeignKey(StateModel, on_delete=models.CASCADE, related_name="UserAddressModel_state", blank=True,
+                              null=True)
+    city = models.ForeignKey(CityModel, on_delete=models.CASCADE, related_name="UserAddressModel_city", blank=True,
+                             null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -34,13 +36,13 @@ class UserAddressModel(models.Model):
 
 class UserEducationModel(models.Model):
     primay_edu = models.ForeignKey(PrimaryEducationAddressModel, on_delete=models.CASCADE,
-                                   related_name="UserEducationModel_primary_edu", blank=True)
+                                   related_name="UserEducationModel_primary_edu", blank=True, null=True)
     secondary_edu = models.ForeignKey(SecondaryEducationAddressModel, on_delete=models.CASCADE,
-                                      related_name="UserEducationModel_secondary_edu", blank=True)
+                                      related_name="UserEducationModel_secondary_edu", blank=True, null=True)
     higher_edu = models.ForeignKey(HigherEducationAddressModel, on_delete=models.CASCADE,
-                                   related_name="UserEducationModel_higer_edu", blank=True)
+                                   related_name="UserEducationModel_higer_edu", blank=True, null=True)
     college_edu = models.ForeignKey(CollegeEducationModel, on_delete=models.CASCADE,
-                                    related_name="UserEducationModel_college_edu", blank=True)
+                                    related_name="UserEducationModel_college_edu", blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -55,9 +57,9 @@ class UserProfileModel(models.Model):
     user_bio = models.CharField(max_length=100, null=True, blank=True)
     contact_no = models.ManyToManyField(UserContactDetailModel, blank=True, related_name="UserProfileModel_contact_no")
     address = models.ManyToManyField(UserAddressModel, blank=True, related_name="UserProfileModel_address")
-    education_addr = models.ManyToManyField(UserEducationModel, blank=True)
+    education_addr = models.ForeignKey(UserEducationModel, on_delete=models.CASCADE, null=True, blank=True, related_name="UserProfileModel_education_addr")
     workplace_addr = models.ForeignKey(EmploymentModel, on_delete=models.CASCADE, blank=True,
-                                       related_name="UserProfileModel_workplace_addr")
+                                       related_name="UserProfileModel_workplace_addr", null=True)
     posts = models.ManyToManyField(UserPostModel, blank=True)
     friends = models.ManyToManyField(FriendModel, blank=True, related_name="UserProfileModel_friend")
 
