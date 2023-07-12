@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin, AbstractBaseUser
-
+from django.contrib.auth import get_user_model
+from model_utils import Choices
 
 # Create your models here.
 
@@ -20,7 +21,7 @@ class CustomBaseManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("The email field is required")
 
@@ -54,3 +55,14 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class OTPModel(models.Model):
+    email = models.EmailField(null=True, blank=True)
+    code = models.IntegerField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.code)

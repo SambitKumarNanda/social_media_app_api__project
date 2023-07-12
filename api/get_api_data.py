@@ -12,7 +12,7 @@ def get_access_token():
 
 
 AUTH_TOKEN = get_access_token().json()['auth_token']
-print(AUTH_TOKEN)
+# print(AUTH_TOKEN)
 
 
 def get_countries():

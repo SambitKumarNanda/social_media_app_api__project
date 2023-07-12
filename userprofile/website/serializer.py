@@ -25,7 +25,7 @@ class UserProfileModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfileModel
         fields = ["gender", "user_profile_pic", "user_profile_bg_pic", "user_bio", "contact_no", "address",
-                  "education_addr", "posts", "friends", "friend_req_receieved", "friend_req_sent"]
+                  "education_addr", "workplace_addr", "posts", "friends"]
 
 
 class UserProfileModelListSerializer(serializers.ModelSerializer):
@@ -54,6 +54,7 @@ class UserProfileModelListSerializer(serializers.ModelSerializer):
 
     def get_education_addr(self, obj):
         try:
+            
             data = UserPhoneNumberModelSerializer(obj.education_addr.all(), many=True).data
         except:
             data = []
