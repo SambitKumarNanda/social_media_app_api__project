@@ -1,33 +1,52 @@
-from .serializer import FriendModelSerializerSendRequestSerializer, FriendModelListSerializer
+from .serializer import FriendModelListSerializer
 from ..models import FriendModel
-from rest_framework import generics, status
+from userprofile.models import UserProfileModel
+from rest_framework import generics, status, views
 from rest_framework.response import Response
 from .serializer import FriendModelAcceptSerializer
 
 
-class FriendRequestModelSendRequestGenericAPIView(generics.GenericAPIView):
-    queryset = FriendModel.objects.all()
-    serializer_class = FriendModelSerializerSendRequestSerializer
+class FriendRequestModelSendRequestAPIView(views.APIView):
+    def post(self, request, id):
+        try:
+            friend_instance = UserProfileModel.objects.get(id=id)
+            userprofile_instance = UserProfileModel.objects.get(
+                user=request.user)
+            print(userprofile_instance.user.email)
 
-    def post(self, request):
-        serializer = FriendModelSerializerSendRequestSerializer(request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Friend request has been sent successfully"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": f"Error has been found at, {serializer.errors}"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            if friend_instance.friends.filter(id=userprofile_instance.id).exists():
+                return Response({"message": "You are already friends"}, status=status.HTTP_200_OK)
+            else:
+                new_friend_instance = FriendModel.objects.create(
+                    request_status="PENDING"
+                )
+                new_friend_instance.target_user.add(friend_instance.user)
+                new_friend_instance.save()
+                # data=userprofile_instance.friends.all()
+                # data.append(new_friend_instance)
+                userprofile_instance.friends.add(new_friend_instance)
+                userprofile_instance.save()
+                return Response({"message": "Friend request sent successfully"}, status=status.HTTP_200_OK)
+
+        except UserProfileModel.DoesNotExist:
+            return Response({"message": "Friend not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FriendRequestModelAcceptRequestGenericAPIView(generics.GenericAPIView):
-    queryset = FriendModel.objects.all()
-    serializer_class = FriendModelListSerializer
+# class FriendRequestModelAcceptRequestGenericAPIView(views.APIView):
+#     def post(self, request, id):
+#         try:
+#             current_user_userprofile_instance = UserProfileModel.objects.get(
+#                 user=request.user)
+#             friend_userprofile_instance = UserProfileModel.objects.get(id=id)
+#             FriendModel.objects.get()
 
-    def put(self, request, id):
-        query = FriendModel.objects.all()
-        serializer = FriendModelAcceptSerializer(data=query, instance=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Friend Request has been accepted"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": f"Error has been found at, {serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+#         except Exception as e:
+#             return Response({"message": e}, status=status.HTTP_200_OK)
+
+
+# class FriendRequestModelRejectRequestAPIView(views.APIView):
+#     def post(self, request, id):
+#         return Response({"message": "Friend Request has been rejected"}, status=status.HTTP_200_OK)
