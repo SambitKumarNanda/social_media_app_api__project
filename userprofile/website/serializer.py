@@ -53,8 +53,7 @@ class UserProfileModelListSerializer(serializers.ModelSerializer):
         return data
 
     def get_education_addr(self, obj):
-        try:
-            
+        try:     
             data = UserPhoneNumberModelSerializer(obj.education_addr.all(), many=True).data
         except:
             data = []

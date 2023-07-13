@@ -21,10 +21,12 @@ from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("users/", include('users.urls')),
-    path("userprofile/", include('userprofile.urls')),
-    path("posts/", include('posts.urls')),
-    path("messages/", include('message.urls')),
     path("advertisement/", include('advertisement.urls')),
     path("coreUtils/", include('coreUtils.urls')),
+    path("feed/", include('feed.urls')),
+    path("friends/", include('friends.urls')),
+    path("messages/", include('message.urls')),
+    path("posts/", include('posts.urls')),
+    path("userprofile/", include('userprofile.urls')),
+    path("users/", include('users.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
